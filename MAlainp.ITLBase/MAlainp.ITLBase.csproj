@@ -37,6 +37,7 @@
     <!-- A reference to the entire .NET Framework is automatically included -->
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Extensors\DateTimeExtensions.cs" />
     <Compile Include="Extensors\StringExtensions.cs" />
     <Compile Include="Extensors\WebRequestExtensions.cs" />
     <Compile Include="Items\Day.cs" />
