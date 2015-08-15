@@ -105,6 +105,6 @@ namespace MAlainp.ITLBase.Parsers
             }
         }
 
-        public abstract bool ParseHTML();
+        public abstract Task<bool> ParseHTMLAsync();
     }
 }

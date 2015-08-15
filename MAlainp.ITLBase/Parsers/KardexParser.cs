@@ -88,20 +88,14 @@ namespace MAlainp.ITLBase.Parsers
         }
 
         /// <summary>
-        /// Do the POST request to the web page and stores the HTML response. 
-        /// </summary>
-        public async Task DoPost()
-        {
-            html = await Post();
-        }
-
-        /// <summary>
         /// Parses the HTML and extracts the CourseId, Course Name, Course Credits, Course Semester, Course grade
         /// and the Course Attempt.
         /// </summary>
         /// <returns><c>true</c>, if HTML was parsed, <c>false</c> otherwise.</returns>
-        public override bool ParseHTML()
+        public override async Task<bool> ParseHTMLAsync()
         {
+            html = await Post();
+
             var rexIds = new Regex(courseIdRegex);
             foreach (var courseMatch in rexIds.Matches(html))
             {
@@ -133,9 +127,9 @@ namespace MAlainp.ITLBase.Parsers
             {
                 KardexCourses.Add(new KardexCourse(ids[i],
                     names[i],
-                    Int32.Parse(credits[i]),
-                    Int32.Parse(semesters[i]),
-                    Int32.Parse(grades[i]),
+                    int.Parse(credits[i]),
+                    int.Parse(semesters[i]),
+                    int.Parse(grades[i]),
                     attempts[i]));
             }
 

@@ -20,6 +20,7 @@
 //  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301
 //  USA
 
+using System;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
@@ -53,19 +54,13 @@ namespace MAlainp.ITLBase.Parsers
         }
 
         /// <summary>
-        /// Do the POST request to the web page and stores the HTML response. 
-        /// </summary>
-        public async Task DoPost()
-        {
-            html = await Post();
-        }
-
-        /// <summary>
         /// Parses the HTML and extracts the student name from the page body.
         /// </summary>
         /// <returns><c>true</c>, if the student name was parsed, <c>false</c> otherwise.</returns>
-        public override bool ParseHTML()
+        public override async Task<bool> ParseHTMLAsync()
         {
+            html = await Post();
+
             var regexName = new Regex("Alumno :[@A-Z" + CHAR + " ]*");
             Match m = regexName.Match(html);
             if (m.Success)

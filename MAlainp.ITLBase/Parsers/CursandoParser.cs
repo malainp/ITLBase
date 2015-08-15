@@ -76,19 +76,13 @@ namespace MAlainp.ITLBase.Parsers
         }
 
         /// <summary>
-        /// Do the POST request to the web page and stores the HTML response. 
-        /// </summary>
-        public async Task DoPost()
-        {
-            html = await Post();
-        }
-
-        /// <summary>
         /// Parses the HTML and extracts the CourseId, Course Name and Course Info
         /// </summary>
         /// <returns><c>true</c>, if HTML was parsed, <c>false</c> otherwise.</returns>
-        public override bool ParseHTML()
+        public override async Task<bool> ParseHTMLAsync()
         {
+            html = await Post();
+
             var rexGroups = new Regex(GroupIdRegex);
             foreach (var groupMatch in rexGroups.Matches(html))
             {
@@ -118,25 +112,26 @@ namespace MAlainp.ITLBase.Parsers
                 const string noClassRoom = "NC";
 
                 EnrolledinCourses.Add(new EnrolledinCourse(groups[item],
-                    courseNames[item++].ReplaceSquareBracketsToAccents(),
-                    monday == freeHour ? Hour.FreeHour : GetHour(monday.Substring(0, monday.IndexOf('/')).Length == 4 ? monday.Substring(0, 2) : monday.Substring(0, 1)),
-                    monday == freeHour ? Hour.FreeHour : GetHour(monday.Substring(0, monday.IndexOf('/')).Length == 4 ? monday.Substring(2, 4) : monday.Substring(1, monday.IndexOf('/'))),
-                    tuesday == freeHour ? Hour.FreeHour : GetHour(tuesday.Substring(0, tuesday.IndexOf('/')).Length == 4 ? tuesday.Substring(0, 2) : tuesday.Substring(0, 1)),
-                    tuesday == freeHour ? Hour.FreeHour : GetHour(tuesday.Substring(0, tuesday.IndexOf('/')).Length == 4 ? tuesday.Substring(2, 4) : tuesday.Substring(1, tuesday.IndexOf('/'))),
-                    wednesday == freeHour ? Hour.FreeHour : GetHour(wednesday.Substring(0, wednesday.IndexOf('/')).Length == 4 ? wednesday.Substring(0, 2) : wednesday.Substring(0, 1)),
-                    wednesday == freeHour ? Hour.FreeHour : GetHour(wednesday.Substring(0, wednesday.IndexOf('/')).Length == 4 ? wednesday.Substring(2, 4) : wednesday.Substring(1, wednesday.IndexOf('/'))),
-                    thursday == freeHour ? Hour.FreeHour : GetHour(thursday.Substring(0, thursday.IndexOf('/')).Length == 4 ? thursday.Substring(0, 2) : thursday.Substring(0, 1)),
-                    thursday == freeHour ? Hour.FreeHour : GetHour(thursday.Substring(0, thursday.IndexOf('/')).Length == 4 ? thursday.Substring(2, 4) : thursday.Substring(1, thursday.IndexOf('/'))),
-                    friday == freeHour ? Hour.FreeHour : GetHour(friday.Substring(0, friday.IndexOf('/')).Length == 4 ? friday.Substring(0, 2) : friday.Substring(0, 1)),
-                    friday == freeHour ? Hour.FreeHour : GetHour(friday.Substring(0, friday.IndexOf('/')).Length == 4 ? friday.Substring(2, 4) : friday.Substring(1, friday.IndexOf('/'))),
-                    monday == freeHour ? noClassRoom : monday.Substring(monday.IndexOf('/') + 1, monday.Length),
-                    tuesday == freeHour ? noClassRoom : tuesday.Substring(tuesday.IndexOf('/') + 1, tuesday.Length),
-                    wednesday == freeHour ? noClassRoom : wednesday.Substring(wednesday.IndexOf('/') + 1, wednesday.Length),
-                    thursday == freeHour ? noClassRoom : thursday.Substring(thursday.IndexOf('/') + 1, thursday.Length),
-                    friday == freeHour ? noClassRoom : friday.Substring(friday.IndexOf('/') + 1, friday.Length)
-                ));
+                   courseNames[item++].ReplaceSquareBracketsToAccents(),
+                   monday == freeHour ? Hour.FreeHour : GetHour(monday.Substring(0, monday.IndexOf('/')).Length == 4 ? monday.Substring(0, 2) : monday.Substring(0, 1)),
+                   monday == freeHour ? Hour.FreeHour : GetHour(monday.Substring(0, monday.IndexOf('/')).Length == 4 ? monday.Substring(2, 2) : monday.Substring(1, 2)),
+                   tuesday == freeHour ? Hour.FreeHour : GetHour(tuesday.Substring(0, tuesday.IndexOf('/')).Length == 4 ? tuesday.Substring(0, 2) : tuesday.Substring(0, 1)),
+                   tuesday == freeHour ? Hour.FreeHour : GetHour(tuesday.Substring(0, tuesday.IndexOf('/')).Length == 4 ? tuesday.Substring(2, 2) : tuesday.Substring(1, 2)),
+                   wednesday == freeHour ? Hour.FreeHour : GetHour(wednesday.Substring(0, wednesday.IndexOf('/')).Length == 4 ? wednesday.Substring(0, 2) : wednesday.Substring(0, 1)),
+                   wednesday == freeHour ? Hour.FreeHour : GetHour(wednesday.Substring(0, wednesday.IndexOf('/')).Length == 4 ? wednesday.Substring(2, 2) : wednesday.Substring(1, 2)),
+                   thursday == freeHour ? Hour.FreeHour : GetHour(thursday.Substring(0, thursday.IndexOf('/')).Length == 4 ? thursday.Substring(0, 2) : thursday.Substring(0, 1)),
+                   thursday == freeHour ? Hour.FreeHour : GetHour(thursday.Substring(0, thursday.IndexOf('/')).Length == 4 ? thursday.Substring(2, 2) : thursday.Substring(1, 2)),
+                   friday == freeHour ? Hour.FreeHour : GetHour(friday.Substring(0, friday.IndexOf('/')).Length == 4 ? friday.Substring(0, 2) : friday.Substring(0, 1)),
+                   friday == freeHour ? Hour.FreeHour : GetHour(friday.Substring(0, friday.IndexOf('/')).Length == 4 ? friday.Substring(2, 2) : friday.Substring(1, 2)),
+                   monday == freeHour ? noClassRoom : monday.Substring(monday.IndexOf('/') + 1),
+                   tuesday == freeHour ? noClassRoom : tuesday.Substring(tuesday.IndexOf('/') + 1),
+                   wednesday == freeHour ? noClassRoom : wednesday.Substring(wednesday.IndexOf('/') + 1),
+                   thursday == freeHour ? noClassRoom : thursday.Substring(thursday.IndexOf('/') + 1),
+                   friday == freeHour ? noClassRoom : friday.Substring(friday.IndexOf('/') + 1)
+               ));
             }
             return true;
+            
         }
 
         /// <summary>
@@ -146,7 +141,7 @@ namespace MAlainp.ITLBase.Parsers
         /// <param name="hour">A string with an hour.</param>
         static Hour GetHour(string hour)
         {
-            int x = Int32.Parse(hour);
+            int x = int.Parse(hour);
             Hour h = Hour.FreeHour;
             switch (x)
             {
