@@ -48,7 +48,7 @@ If you found a bug in the PCL please look in [this page](https://github.com/mala
 
 ##Special Thanks 
 
-* Eduardo Reza – For providing help in translation
+* Eduardo Reza – For helping with translation
 * Gerardo Chiner – For providing a communication channel to Eduardo Reza. Thanks Chiner!
 
 ##Licencing
