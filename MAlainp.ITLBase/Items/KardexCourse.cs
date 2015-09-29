@@ -20,6 +20,7 @@
 //  USA
 
 using MAlainp.ITLBase.Extensors;
+using SQLite.Net.Attributes;
 
 namespace MAlainp.ITLBase.Items
 {
@@ -28,6 +29,12 @@ namespace MAlainp.ITLBase.Items
     /// </summary>
     public class KardexCourse
     {
+        /// <summary>
+        /// Holds the Id given by the SQLite database
+        /// </summary>
+        [PrimaryKey, AutoIncrement]
+        public int Id { get; set; }
+
         /// <summary>
         /// Gets the course identifier.
         /// </summary>
@@ -67,6 +74,11 @@ namespace MAlainp.ITLBase.Items
         /// <summary>
         /// Initializes a new instance of the <see cref="ITLBase.Items.KardexCourse"/> class.
         /// </summary>
+		public KardexCourse(){ }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ITLBase.Items.KardexCourse"/> class.
+        /// </summary>
         /// <param name="courseId">Course identifier.</param>
         /// <param name="courseName">Course name.</param>
         /// <param name="courseCredits">Course credits.</param>
@@ -77,7 +89,7 @@ namespace MAlainp.ITLBase.Items
                              int courseSemester, int courseGrade, string courseOportunity)
         {
             CourseId = courseId;
-            CourseName = courseName;
+			CourseName = courseName.Capitalize();
             CourseCredits = courseCredits;
             CourseSemester = courseSemester;
             CourseGrade = courseGrade;

@@ -65,7 +65,7 @@ namespace MAlainp.ITLBase.Parsers
             Match m = regexName.Match(html);
             if (m.Success)
             {
-                StudentName = m.Value.Replace(CHAR, "").Replace("@", "").Replace("Alumno :", "");
+                StudentName = m.Value.Replace(CHAR, "Ñ").Replace("@", "").Replace("Alumno :", "");
                 return true;
             }
             return false;

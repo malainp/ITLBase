@@ -20,6 +20,10 @@
 //  USA
 
 using System;
+using System.Collections.Generic;
+using SQLite.Net.Attributes;
+using SQLiteNetExtensions.Attributes;
+using MAlainp.ITLBase.Extensors;
 
 namespace MAlainp.ITLBase.Items
 {
@@ -31,9 +35,11 @@ namespace MAlainp.ITLBase.Items
         const int Start = 0;
         const int Finish = 1;
 
-        readonly string[] classrooms;
-
-        readonly Hour[,] hours;
+        /// <summary>
+        /// Holds the Id given by the SQLite database
+        /// </summary>
+        [PrimaryKey, AutoIncrement]
+        public int Id { get; set; }
 
         /// <summary>
         /// Gets the group Id.
@@ -48,16 +54,26 @@ namespace MAlainp.ITLBase.Items
         public string Name { get; private set; }
 
         /// <summary>
+        /// Gets the list with the course information
+        /// </summary>
+        [OneToMany(CascadeOperations = CascadeOperation.All)]
+        public List<CourseHour> Hours { get; set; }
+
+        /// <summary>
+        /// Initializes a new empty instance of the <see cref="ITLBase.Items.EnrolledinCourse"/> class.
+        /// </summary>
+        public EnrolledinCourse() { }
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="ITLBase.Items.EnrolledinCourse"/> class.
         /// </summary>
         /// <param name="group">Course Group Id.</param>
         /// <param name="name">Course Name.</param>
         public EnrolledinCourse(string group, string name)
         {
-            Group = group;
-            Name = name;
-            hours = new Hour[5, 2];
-            classrooms = new string[5];
+			Group = group;
+			Name = name.Capitalize ();
+            Hours = new List<CourseHour>();
         }
 
         /// <summary>
@@ -92,21 +108,11 @@ namespace MAlainp.ITLBase.Items
                                  string crThursday,
                                  string crFriday) : this(group, name)
         {
-            hours[(int)Day.Monday, Start] = sMonday;
-            hours[(int)Day.Monday, Finish] = fMonday;
-            hours[(int)Day.Tuesday, Start] = sTuesday;
-            hours[(int)Day.Tuesday, Finish] = fTuesday;
-            hours[(int)Day.Wednesday, Start] = sWednesday;
-            hours[(int)Day.Wednesday, Finish] = fWednesday;
-            hours[(int)Day.Thursday, Start] = sThursday;
-            hours[(int)Day.Thursday, Finish] = fThursday;
-            hours[(int)Day.Friday, Start] = sFriday;
-            hours[(int)Day.Friday, Finish] = fFriday;
-            classrooms[(int)Day.Monday] = crMonday;
-            classrooms[(int)Day.Tuesday] = crTuesday;
-            classrooms[(int)Day.Wednesday] = crWednesday;
-            classrooms[(int)Day.Thursday] = crThursday;
-            classrooms[(int)Day.Friday] = crFriday;
+            Hours.Add(new CourseHour(sMonday, fMonday, crMonday, this));
+            Hours.Add(new CourseHour(sTuesday, fTuesday, crTuesday, this));
+            Hours.Add(new CourseHour(sWednesday, fWednesday, crWednesday, this));
+            Hours.Add(new CourseHour(sThursday, fThursday, crThursday, this));
+            Hours.Add(new CourseHour(sFriday, fFriday, crFriday, this));
         }
 
         /// <summary>
@@ -120,9 +126,7 @@ namespace MAlainp.ITLBase.Items
         {
             foreach (var day in Enum.GetValues(typeof(Day)))
             {
-                this.hours[(int)day, Start] = hours[(int)day, Start];
-                this.hours[(int)day, Finish] = hours[(int)day, Finish];
-                this.classrooms[(int)day] = classrooms[(int)day];
+                Hours.Add(new CourseHour(hours[(int)day, Start],hours[(int)day, Finish],classrooms[(int)day], this));
             }
         }
 
@@ -133,7 +137,7 @@ namespace MAlainp.ITLBase.Items
         /// <param name="d">The day</param>
         public Hour StartHour(Day d)
         {
-            return hours[(int)d, Start];
+            return Hours[(int)d].StartHour;
         }
 
         /// <summary>
@@ -143,7 +147,7 @@ namespace MAlainp.ITLBase.Items
         /// <param name="d">The day</param>
         public Hour FinishHour(Day d)
         {
-            return hours[(int)d, Finish];
+            return Hours[(int)d].FinishHour;
         }
 
         /// <summary>
@@ -153,7 +157,7 @@ namespace MAlainp.ITLBase.Items
         /// <param name="d">The day</param>
         public string Classroom(Day d)
         {
-            return classrooms[(int)d];
+            return Hours[(int)d].Classroom;
         }
     }
 }

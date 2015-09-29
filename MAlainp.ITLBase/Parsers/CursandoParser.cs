@@ -38,12 +38,12 @@ namespace MAlainp.ITLBase.Parsers
         /// <summary>
         /// The group identifier regex.
         /// </summary>
-        const string GroupIdRegex = "[A-Z][0-9][0-9]</font>[A-Z]";
+        const string GroupIdRegex = "[A-Z]{1,2}[0-9]{1,2}</font>[A-Z]";
 
         /// <summary>
         /// The course name regex.
         /// </summary>
-        const string CourseNameRegex = "\"#000000\">[A-Z \\[]*<";
+        const string CourseNameRegex = "\"#000000\">[A-Z� \\[]*<";
 
         /// <summary>
         /// The course info regex.
@@ -92,7 +92,7 @@ namespace MAlainp.ITLBase.Parsers
             var rexCourses = new Regex(CourseNameRegex);
             foreach (var nameMatch in rexCourses.Matches(html))
             {
-                courseNames.Add(nameMatch.ToString().Replace("\"#000000\">", "").Replace("<", ""));
+                courseNames.Add(nameMatch.ToString().Replace("\"#000000\">", "").Replace("<", "").Replace('�','ñ'));
             }
 
             var rexCourseInfo = new Regex(CourseInfoRegex);

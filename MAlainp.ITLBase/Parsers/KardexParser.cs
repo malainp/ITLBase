@@ -37,12 +37,12 @@ namespace MAlainp.ITLBase.Parsers
         /// <summary>
         /// The course identifier regex used to extract each course Id in the table.
         /// </summary>
-        const string courseIdRegex = "<center>[A-Z][0-9]{2}";
+        const string courseIdRegex = "<center>[A-Z]{1,2}[0-9]{1,2}|<center>[0-9][A-Z]{1,2}";
 
         /// <summary>
         /// The course name regex used to extract each course name in the table.
         /// </summary>
-        const string courseNameRegex = "<td bgcolor='#[A-F0-9]*'><center>[A-Z\\\\. ]*</center></td>";
+        const string courseNameRegex = "<td bgcolor='#[A-F0-9]*'><center>[A-Z\\\\. -]{3,}[\0-9$]*</center></td>";
 
         /// <summary>
         /// The course info regex used to extract the info of each course in the table.
@@ -105,7 +105,7 @@ namespace MAlainp.ITLBase.Parsers
             var rexNames = new Regex(courseNameRegex);
             foreach (var nameMatch in rexNames.Matches(html))
             {
-                names.Add(nameMatch.ToString().Replace("</center></td>", "").Substring(30));
+                names.Add(nameMatch.ToString().Replace("  ", " ").Replace("</center></td>", "").Substring(30));
             }
 
             var rexInfo = new Regex(courseInfoRegex);

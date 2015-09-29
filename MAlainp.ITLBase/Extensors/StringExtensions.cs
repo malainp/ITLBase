@@ -19,6 +19,9 @@
 //  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301
 //  USA
 
+
+using System.Globalization;
+
 namespace MAlainp.ITLBase.Extensors
 {
     /// <summary>
@@ -64,6 +67,25 @@ namespace MAlainp.ITLBase.Extensors
                 s = s.Replace("[U", "Ú");
             }
             return s;
+        }
+
+        public static string Capitalize(this string s)
+        {
+            string auxStr = s.ToLower().Replace("  ", " ");
+            string[] auxArr = auxStr.Split(' ');
+            string result = "";
+            bool firstWord = true;
+            foreach (string word in auxArr)
+            {
+                if (!firstWord)
+                    result += " ";
+                else
+                    firstWord = false;
+
+                result += word.Substring(0, 1).ToUpper() + word.Substring(1, word.Length - 1);
+            }
+
+            return result;
         }
     }
 }
