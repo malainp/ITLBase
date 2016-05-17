@@ -42,7 +42,7 @@ async void SomeMethod(some params…)
 
 If you want to add functionality to this little PCL send an email with your information and a little C# program (Not a Hello World) to malain.pera@gmail.com to become a collaborator or fork this repo in your GitHub and when you finish send me a pull request to review your changes and merge it with mine.
 
-###You found a bug?
+###Did you found a bug?
 
 If you found a bug in the PCL please look in [this page](https://github.com/malainp/ITLBase/issues) for another one similar issue, if you don't find anything open a new issue and write what you found (attach an image if possible).
 
